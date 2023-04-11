@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { readNotes, writeNotes } = require('./helpers/readAndWrite.js')
 const PORT = 3001;
 const app = express();
 //At the top, we are declaring the port 3001
@@ -26,17 +27,26 @@ app.get('/notes', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'db', 'db.json'))
 // });
 //alternative option to send as json?
-app.get('/api/notes', (req, res) => {
-    fs.readFile(path.join(__dirname, 'db', 'db.json'), (err, data) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Servor had an error getting notes');
-        } else {
-            const notes = JSON.parse(data);
-            res.json(notes);
-        }
-    });
+app.get('/api/notes', async(req, res) => {
+    try {
+        const notes = await readNotes();
+        res.json(notes);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500).send('Server had an error getting notes');
+    }
 });
+// app.get('/api/notes', (req, res) => {
+//     fs.readFile(path.join(__dirname, 'db', 'db.json'), (err, data) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send('Servor had an error getting notes');
+//         } else {
+//             const notes = JSON.parse(data);
+//             res.json(notes);
+//         }
+//     });
+// });
 
 // This wildcard will return the index.html file for any get request that doesnt match a defined route. 
 app.get('*', (req, res) => {
@@ -44,7 +54,7 @@ app.get('*', (req, res) => {
 });
 
 //
-app.post('/api/notes', function(req, res) {
+app.post('/api/notes', async(req, res) => {
 
   const { title, text } = req.body;
   if (title && text) {
@@ -53,29 +63,39 @@ app.post('/api/notes', function(req, res) {
         text,
     };
     console.log(newNote);
-    fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, existingNotes) => {
-        if (error) throw error;
-  const existingNotesArr = JSON.parse(existingNotes);
-  console.log(existingNotesArr);
-  existingNotesArr.push(newNote);
-   
-    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(existingNotesArr) + '\n', (err) => {
-        console.log(existingNotesArr);
-        if (err) {
-    console.log(err)
-    res.status(500).json("Failed to save note.");
-
-        } else {
-    res.json('Note saved!');
-        }
-    });
-});
+    try {
+        const existingNotes = await readNotes();
+        existingNotes.push(newNote);
+        await writeNotes(existingNotes)
+        res.json('Note saved!');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json('Failed to save note.');
+    }
+} else {
+    res.status(400).json('Title AND text are required!');
 }
-         else {
-    res.status(400).json("Title and text are required");
-         }
-        });
-    
+});
+//     fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, existingNotes) => {
+//         if (error) throw error;
+//   const existingNotesArr = JSON.parse(existingNotes);
+//   console.log(existingNotesArr);
+//   existingNotesArr.push(newNote);
+   
+//     fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(existingNotesArr) + '\n', (err) => {
+//         console.log(existingNotesArr);
+//         if (err) {
+//     console.log(err)
+//     res.status(500).json("Failed to save note.");
+
+//         } else {
+//     res.json('Note saved!');
+//         }
+//     });
+// });
+// }
+//          else {
+//     res.status(400).json("Title and text are required");
 app.listen(PORT, () => {
     console.log(`Example app listening at http://localhost:${PORT}`);
   });
