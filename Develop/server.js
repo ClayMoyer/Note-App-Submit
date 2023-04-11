@@ -52,12 +52,15 @@ app.post('/api/notes', function(req, res) {
         title,
         text,
     };
-    fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, data) =>
-  error ? console.error(error) : console.log(data)
-  );
-  
-    fs.appendFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(newNote) + '\n', (err) => {
-        console.log(newNote);
+    console.log(newNote);
+    fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, existingNotes) => {
+        if (error) throw error;
+  const existingNotesArr = JSON.parse(existingNotes);
+  console.log(existingNotesArr);
+  existingNotesArr.push(newNote);
+   
+    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(existingNotesArr) + '\n', (err) => {
+        console.log(existingNotesArr);
         if (err) {
     console.log(err)
     res.status(500).json("Failed to save note.");
@@ -66,10 +69,12 @@ app.post('/api/notes', function(req, res) {
     res.json('Note saved!');
         }
     });
-        } else {
+});
+}
+         else {
     res.status(400).json("Title and text are required");
-        }
-    });
+         }
+        });
     
 app.listen(PORT, () => {
     console.log(`Example app listening at http://localhost:${PORT}`);
