@@ -1,22 +1,17 @@
 [
   {
-    "title": "Test Title",
-    "text": "Test text"
+    "title": "Test Note",
+    "text": "Testing notes",
+    "id": "5415c560-d8d5-11ed-bd65-034fd2b6d7ab"
   },
   {
-    "title": "sdf",
-    "text": "fsdfsadf"
+    "title": "Groceries",
+    "text": "Lightbulbs, milk, coffee",
+    "id": "67e814d0-d8d5-11ed-bd65-034fd2b6d7ab"
   },
   {
-    "title": "sdfsa",
-    "text": "sdfsaf"
-  },
-  {
-    "title": "fsadfsa",
-    "text": "sadafsdf"
-  },
-  {
-    "title": "Testing 123",
-    "text": "123 testing"
+    "title": "Errands",
+    "text": "Call dr, tire alignment, oil change",
+    "id": "7639b340-d8d5-11ed-bd65-034fd2b6d7ab"
   }
 ]

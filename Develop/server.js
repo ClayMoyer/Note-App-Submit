@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { readNotes, writeNotes } = require('./helpers/readAndWrite.js')
+const uuidv1 = require('uuid/v1');
+
 const PORT = 3001;
 const app = express();
 //At the top, we are declaring the port 3001
@@ -61,6 +63,7 @@ app.post('/api/notes', async(req, res) => {
     const newNote = {
         title,
         text,
+        id: uuidv1(),
     };
     console.log(newNote);
     try {
