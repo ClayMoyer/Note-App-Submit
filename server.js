@@ -79,26 +79,7 @@ app.post('/api/notes', async(req, res) => {
     res.status(400).json('Title AND text are required!');
 }
 });
-//     fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, existingNotes) => {
-//         if (error) throw error;
-//   const existingNotesArr = JSON.parse(existingNotes);
-//   console.log(existingNotesArr);
-//   existingNotesArr.push(newNote);
-   
-//     fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(existingNotesArr) + '\n', (err) => {
-//         console.log(existingNotesArr);
-//         if (err) {
-//     console.log(err)
-//     res.status(500).json("Failed to save note.");
 
-//         } else {
-//     res.json('Note saved!');
-//         }
-//     });
-// });
-// }
-//          else {
-//     res.status(400).json("Title and text are required");
 app.listen(PORT, () => {
     console.log(`Example app listening at http://localhost:${PORT}`);
   });
